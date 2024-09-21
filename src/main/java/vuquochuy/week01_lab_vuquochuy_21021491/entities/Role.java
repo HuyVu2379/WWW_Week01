@@ -1,13 +1,13 @@
 package vuquochuy.week01_lab_vuquochuy_21021491.entities;
 
 public class Role {
-    private long account_id;
+    private String role_id;
     private String role_name;
     private String description;
     private int status;
 
-    public Role(long account_id, String role_name, String description, int status) {
-        this.account_id = account_id;
+    public Role(String role_id, String role_name, String description, int status) {
+        this.role_id = role_id;
         this.role_name = role_name;
         this.description = description;
         this.status = status;
@@ -16,12 +16,12 @@ public class Role {
     public Role() {
     }
 
-    public long getAccount_id() {
-        return account_id;
+    public String getRole_id() {
+        return role_id;
     }
 
-    public void setAccount_id(long account_id) {
-        this.account_id = account_id;
+    public void setRole_id(String role_id) {
+        this.role_id = role_id;
     }
 
     public String getRole_name() {
@@ -51,7 +51,7 @@ public class Role {
     @Override
     public String toString() {
         return "Role{" +
-                "account_id=" + account_id +
+                "role_id=" + role_id +
                 ", role_name='" + role_name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +

@@ -9,6 +9,8 @@ import vuquochuy.week01_lab_vuquochuy_21021491.services.AccountServices;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoleRepository {
     Connection connection = ConnectionDB.getConnection();
@@ -30,5 +32,24 @@ public class RoleRepository {
             e.printStackTrace();
         }
         return grantAccess;
+    }
+    public List<Role> findAll(){
+        String sql = "Select * from role";
+        List<Role> roles = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                String role_id = rs.getString("role_id");
+                String role_name = rs.getString("role_name");
+                String description = rs.getString("description");
+                int status = rs.getInt("status");
+                Role role = new Role(role_id, role_name, description, status);
+                roles.add(role);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return roles;
     }
 }

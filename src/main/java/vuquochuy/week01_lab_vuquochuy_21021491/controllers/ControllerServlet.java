@@ -27,7 +27,7 @@ public class ControllerServlet extends HttpServlet {
     RoleServices roleServices = new RoleServices();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        super.doGet(request, response);
+//        super.doGet(request, response);
     }
 
     @Override
@@ -38,12 +38,16 @@ public class ControllerServlet extends HttpServlet {
                 case "login":
                     handleLogin(req, resp);
                     break;
+                case "logout":
+                    handleLogout(req, resp);
+                    break;
+                case "addAccount":
+                    handleAddAccount(req, resp);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PrintWriter out = resp.getWriter();
-        out.println("Error");
     }
 
     private boolean handleLogin(HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -56,14 +60,37 @@ public class ControllerServlet extends HttpServlet {
         } else if (checkLoginSuccess == 1) {
             resp.getWriter().println(("Password incorrect"));
             return false;
+        } else {
+            Account account = accountRepository.findByEmail(username);
+            Log log = new Log(account.getAccount_id(), Date.valueOf(LocalDate.now()), null, "First Login");
+            System.out.println("Creating new log for account: " + account.getAccount_id());
+            logRepository.add(log);
+            System.out.println("Log created");
+            HttpSession session = req.getSession();
+            session.setAttribute("account", account);
+            resp.sendRedirect("dashboard.jsp");
+            return true;
         }
-        Account acount = accountRepository.findByEmail(username);
-        Log log = new Log(acount.getAccount_id(), Date.valueOf(LocalDate.now()),null,"First Login");
-        logRepository.add(log);
+    }
+
+    private void handleLogout(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
-        session.setAttribute("account", acount);
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("dashborad.jsp");
-        requestDispatcher.forward(req, resp);
-        return true;
+        Account account = (Account) session.getAttribute("account");
+        logRepository.updateLogoutTime(Date.valueOf(LocalDate.now()), account.getAccount_id());
+        session.removeAttribute("account");
+        RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
+        rd.forward(req, resp);
+    }
+
+    private void handleAddAccount(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        String account_id = req.getParameter("accountId");
+        String full_name = req.getParameter("fullName");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String phone = req.getParameter("phone");
+        int status = Integer.parseInt(req.getParameter("status"));
+        Account account = new Account(account_id, full_name, email, password, phone, status);
+        accountRepository.add(account);
+        resp.sendRedirect("dashboard.jsp");
     }
 }
