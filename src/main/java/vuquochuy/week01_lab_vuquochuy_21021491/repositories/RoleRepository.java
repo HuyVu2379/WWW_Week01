@@ -52,4 +52,62 @@ public class RoleRepository {
         }
         return roles;
     }
+
+    public void addGrantAccess(GrantAccess grantAccess){
+        String sql = "Insert into grant_access (account_id, role_id, is_grant, note) values (?,?,?,?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, grantAccess.getAccount_id());
+            statement.setString(2, grantAccess.getRole_id());
+            statement.setBoolean(3, grantAccess.isIs_grant());
+            statement.setString(4, grantAccess.getNote());
+            System.out.println(statement);
+            statement.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public boolean addRole(Role role){
+        String sql = "Insert into role (role_id, role_name, description, status) values (?,?,?,?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, role.getRole_id());
+            statement.setString(2, role.getRole_name());
+            statement.setString(3, role.getDescription());
+            statement.setInt(4, role.getStatus());
+            statement.executeUpdate();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean update(Role role) {
+        String sql = "Update role set role_name = ?, description = ?, status = ? where role_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, role.getRole_name());
+            statement.setString(2, role.getDescription());
+            statement.setInt(3, role.getStatus());
+            statement.setString(4, role.getRole_id());
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean delete(String role_id) {
+        String sql = "Delete from role where role_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, role_id);
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

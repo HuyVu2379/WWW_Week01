@@ -13,9 +13,13 @@ public class GrantAccess {
         this.note = note;
     }
 
-    public GrantAccess() {
+    public GrantAccess(String account_id, String role_id) {
+        this.account_id = account_id;
+        this.role_id = role_id;
     }
 
+    public GrantAccess() {
+    }
     public String getAccount_id() {
         return account_id;
     }

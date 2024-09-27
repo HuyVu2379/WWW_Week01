@@ -1,18 +1,18 @@
 package vuquochuy.week01_lab_vuquochuy_21021491.entities;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Log {
     private Long log_id;
     private String account_id;
-    private Date login_date;
-    private Date logout_date;
+    private Timestamp login_date;
+    private Timestamp logout_date;
     private String description;
 
     public Log() {
     }
 
-    public Log(String account_id, Date login_date, Date logout_date, String description) {
+    public Log(String account_id, Timestamp login_date, Timestamp logout_date, String description) {
         this.account_id = account_id;
         this.login_date = login_date;
         this.logout_date = logout_date;
@@ -35,19 +35,19 @@ public class Log {
         this.account_id = account_id;
     }
 
-    public Date getLogin_date() {
+    public Timestamp getLogin_date() {
         return login_date;
     }
 
-    public void setLogin_date(Date login_date) {
+    public void setLogin_date(Timestamp login_date) {
         this.login_date = login_date;
     }
 
-    public Date getLogout_date() {
+    public Timestamp getLogout_date() {
         return logout_date;
     }
 
-    public void setLogout_date(Date logout_date) {
+    public void setLogout_date(Timestamp logout_date) {
         this.logout_date = logout_date;
     }
 

@@ -2,6 +2,7 @@ package vuquochuy.week01_lab_vuquochuy_21021491.repositories;
 
 import vuquochuy.week01_lab_vuquochuy_21021491.connectDB.ConnectionDB;
 import vuquochuy.week01_lab_vuquochuy_21021491.entities.Account;
+import vuquochuy.week01_lab_vuquochuy_21021491.entities.GrantAccess;
 import vuquochuy.week01_lab_vuquochuy_21021491.entities.Role;
 
 import java.sql.Connection;
@@ -72,25 +73,51 @@ public class AccountRepository {
             e.printStackTrace();
         }
     }
+    public void update(Account account) throws SQLException {
+        String sql = "Update Account set full_name = ?, email = ?, password = ?, phone = ?, status = ? where account_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, account.getFull_name());
+            statement.setString(2, account.getEmail());
+            statement.setString(3, account.getPassword());
+            statement.setString(4, account.getPhone());
+            statement.setInt(5, account.getSatatus());
+            statement.setString(6, account.getAccount_id());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    public List<Role> getRoleForAccount(String account_id) {
-        String sql = "Select * from Role where account_id = ?";
-        List<Role> roles = new ArrayList<Role>();
+    public List<GrantAccess> getRoleForAccount(String account_id) {
+        String sql = "Select * from grant_access where account_id = ?";
+        List<GrantAccess> grantAccesses = new ArrayList<GrantAccess>();
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, account_id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 String role_id = rs.getString("role_id");
-                String role_name = rs.getString("role_name");
-                String description = rs.getString("description");
-                int status = rs.getInt("status");
-                Role role = new Role(account_id,role_name,description,status);
-                roles.add(role);
+                String account_id1 = rs.getString("account_id");
+                GrantAccess grantAccess = new GrantAccess(account_id1, role_id);
+                grantAccesses.add(grantAccess);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return roles;
+        return grantAccesses;
+    }
+
+    public boolean delete(String account_id) throws SQLException {
+        String sql = "Delete from Account where account_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, account_id);
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
